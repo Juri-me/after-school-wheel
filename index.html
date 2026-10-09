@@ -1,10 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>После школы — Колесо фортуны</title>
-
   <style>
     * { box-sizing: border-box; }
 
@@ -12,16 +12,12 @@
       margin: 0;
       min-height: 100vh;
       font-family: Arial, sans-serif;
-      background: linear-gradient(145deg, #eef4ff, #ffffff);
+      background: linear-gradient(145deg, #eef4ff, #fff);
       color: #172033;
-      overflow-x: hidden; /* Чтобы не было горизонтальной прокрутки */
+      overflow-x: hidden;
     }
 
-    .container {
-      max-width: 480px;
-      margin: auto;
-      padding: 20px;
-    }
+    .container { max-width: 480px; margin: auto; padding: 20px; }
 
     .card {
       background: #fff;
@@ -44,17 +40,9 @@
       margin-top: 5px;
     }
 
-    h1 {
-      text-align: center;
-      font-size: 29px;
-      margin: 28px 0 12px;
-    }
+    h1 { text-align: center; font-size: 29px; margin: 28px 0 12px; }
 
-    .description {
-      text-align: center;
-      color: #606b80;
-      line-height: 1.5;
-    }
+    .description { text-align: center; color: #606b80; line-height: 1.5; }
 
     .prize {
       background: #edf4ff;
@@ -66,12 +54,7 @@
       margin: 22px 0;
     }
 
-    label {
-      display: block;
-      font-size: 14px;
-      font-weight: bold;
-      margin-bottom: 8px;
-    }
+    label { display: block; font-size: 14px; font-weight: bold; margin-bottom: 8px; }
 
     input {
       width: 100%;
@@ -94,37 +77,23 @@
       cursor: pointer;
     }
 
-    button:disabled {
-      opacity: 0.5;
-    }
+    button:disabled { opacity: .5; cursor: wait; }
 
-    .note {
-      color: #7b8496;
-      font-size: 12px;
-      line-height: 1.5;
-      margin-top: 10px;
-    }
-
-    .error {
-      color: #d12c2c;
-      font-size: 13px;
-      margin-top: 9px;
-    }
-
-    .hidden {
-      display: none;
-    }
+    .note { color: #7b8496; font-size: 12px; line-height: 1.5; margin-top: 10px; }
+    .error { color: #d12c2c; font-size: 13px; margin-top: 9px; }
+    .hidden { display: none; }
 
     .wheel-wrapper {
       position: relative;
-      width: 310px;
-      height: 310px;
+      width: min(310px, 100%);
+      aspect-ratio: 1;
       margin: 25px auto;
     }
 
     #wheel {
-      width: 310px;
-      height: 310px;
+      display: block;
+      width: 100%;
+      height: 100%;
       border-radius: 50%;
       transition: transform 4.5s cubic-bezier(.12, .72, .18, 1);
       box-shadow: 0 12px 35px rgba(40, 70, 130, .25);
@@ -150,30 +119,14 @@
       border-radius: 22px;
     }
 
-    .result-emoji {
-      font-size: 60px;
-    }
-
-    .result h2 {
-      font-size: 26px;
-    }
-
-    .result p {
-      color: #626d82;
-      line-height: 1.5;
-    }
-
-    .success {
-      color: #168548 !important;
-      font-weight: bold;
-    }
+    .result-emoji { font-size: 60px; }
+    .result h2 { font-size: 26px; }
+    .result p { color: #626d82; line-height: 1.5; }
+    .success { color: #168548 !important; font-weight: bold; }
   </style>
 </head>
-
 <body>
-
   <div class="container">
-
     <div class="card" id="registration">
       <div class="logo">ПОСЛЕ ШКОЛЫ</div>
       <div class="subtitle">театральная студия</div>
@@ -185,13 +138,13 @@
         🎁 Главный приз<br><br>
         1 МЕСЯЦ ОБУЧЕНИЯ БЕСПЛАТНО
       </div>
-      <label>Номер телефона</label>
-      <input id="phone" type="tel" placeholder="+7 (___) ___-__-__">
+      <label for="phone">Номер телефона</label>
+      <input id="phone" type="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__">
       <div class="note">
         ⚠️ Введите тот номер телефона, который вы указывали при записи на пробное занятие.
       </div>
-      <div id="error" class="error"></div>
-      <button onclick="checkPhone()">ПРОВЕРИТЬ УЧАСТИЕ</button>
+      <div id="error" class="error" role="alert"></div>
+      <button id="checkButton" type="button" onclick="checkPhone()">ПРОВЕРИТЬ УЧАСТИЕ</button>
     </div>
 
     <div class="card hidden" id="wheelScreen">
@@ -204,7 +157,8 @@
         <div class="pointer"></div>
         <canvas id="wheel" width="620" height="620"></canvas>
       </div>
-      <button id="spinButton" onclick="spin()">🎡 КРУТИТЬ КОЛЕСО</button>
+      <div id="spinError" class="error" role="alert"></div>
+      <button id="spinButton" type="button" onclick="spin()">🎡 КРУТИТЬ КОЛЕСО</button>
     </div>
 
     <div class="card hidden" id="result">
@@ -214,20 +168,13 @@
         <div class="result-emoji" id="emoji">🎉</div>
         <h2 id="title"></h2>
         <p id="text"></p>
-        <p class="success">✓ Результат зарегистрирован</p>
+        <p class="success">✓ Результат зарегистрирован на сервере</p>
       </div>
     </div>
-
   </div>
 
   <script>
-    const participants = [
-      "79991234567",
-      "79211234567",
-      "79111234567",
-      "79001234567",
-      "79876543210"
-    ];
+    const API_URL = "https://posle-shkoly-wheel.yu-begmetyuk.workers.dev/";
 
     const prizes = [
       {
@@ -259,12 +206,12 @@
     let phone = "";
     let prize = null;
     let rotation = 0;
+    let isSpinning = false;
+    let requestInProgress = false;
 
     function normalize(value) {
       let digits = value.replace(/\D/g, "");
-      if (digits.startsWith("8")) {
-        digits = "7" + digits.substring(1);
-      }
+      if (digits.startsWith("8")) digits = "7" + digits.substring(1);
       return digits;
     }
 
@@ -278,55 +225,71 @@
         return;
       }
 
-      if (!participants.includes(value)) {
-        error.textContent = "Такой номер не найден в списке участников пробного занятия.";
-        return;
-      }
-
-      if (localStorage.getItem("used_" + value)) {
-        error.textContent = "Этот номер уже участвовал в розыгрыше.";
-        return;
-      }
-
       phone = value;
       document.getElementById("registration").classList.add("hidden");
       document.getElementById("wheelScreen").classList.remove("hidden");
     }
 
-    function choosePrize() {
-      let random = Math.random() * 100;
-      const weights = [20, 30, 30, 20];
+    async function spin() {
+      if (isSpinning || requestInProgress || prize || !phone) return;
 
-      for (let i = 0; i < prizes.length; i++) {
-        random -= weights[i];
-        if (random <= 0) {
-          return prizes[i];
+      requestInProgress = true;
+      const button = document.getElementById("spinButton");
+      const error = document.getElementById("spinError");
+
+      button.disabled = true;
+      button.textContent = "Связываемся с сервером…";
+      error.textContent = "";
+
+      try {
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "spin", phone })
+        });
+
+        let data;
+        try {
+          data = await response.json();
+        } catch {
+          throw new Error("Сервер вернул некорректный ответ.");
         }
+
+        if (!response.ok || !data.ok || !data.prize) {
+          throw new Error(
+            data.error || "Сервер не подтвердил результат. Обновите страницу или обратитесь к организатору."
+          );
+        }
+
+        const selectedPrize = prizes.find(item => item.name === data.prize.name);
+        if (!selectedPrize) {
+          throw new Error("Сервер вернул неизвестный приз. Обратитесь к организатору.");
+        }
+
+        prize = selectedPrize;
+        isSpinning = true;
+
+        const index = prizes.indexOf(prize);
+        const sector = 360 / prizes.length;
+        const target = 360 * 6 + (360 - (index * sector + sector / 2));
+        rotation += target;
+
+        button.textContent = "Колесо вращается…";
+        document.getElementById("wheel").style.transform = "rotate(" + rotation + "deg)";
+
+        setTimeout(() => {
+          document.getElementById("wheelScreen").classList.add("hidden");
+          document.getElementById("result").classList.remove("hidden");
+          document.getElementById("emoji").textContent = prize.emoji;
+          document.getElementById("title").textContent = prize.name;
+          document.getElementById("text").textContent = prize.text;
+        }, 4600);
+      } catch (err) {
+        requestInProgress = false;
+        button.disabled = false;
+        button.textContent = "🎡 КРУТИТЬ КОЛЕСО";
+        error.textContent = err.message || "Ошибка соединения с сервером.";
       }
-      return prizes;
-    }
-
-    function spin() {
-      if (prize) return;
-
-      prize = choosePrize();
-      const index = prizes.indexOf(prize);
-      const sector = 360 / prizes.length;
-      const target = 360 * 6 + (360 - (index * sector + sector / 2));
-
-      rotation += target;
-
-      document.getElementById("wheel").style.transform = "rotate(" + rotation + "deg)";
-      document.getElementById("spinButton").disabled = true;
-
-      setTimeout(function () {
-        localStorage.setItem("used_" + phone, "1");
-        document.getElementById("wheelScreen").classList.add("hidden");
-        document.getElementById("result").classList.remove("hidden");
-        document.getElementById("emoji").textContent = prize.emoji;
-        document.getElementById("title").textContent = prize.name;
-        document.getElementById("text").textContent = prize.text;
-      }, 4600);
     }
 
     function drawWheel() {
@@ -365,24 +328,16 @@
       ctx.stroke();
     }
 
-    // Рисуем колесо сразу при загрузке
     drawWheel();
   </script>
 
-  <!-- ================= ВАЖНО: VK BRIDGE ================= -->
   <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
   <script>
-    const bridge = window.VKBridge;
-    
-    if (bridge) {
-      // Если приложение запущено внутри VK — отправляем сигнал инициализации
-      bridge.send('VKWebAppInit');
-    } else {
-      // Если открыли просто в браузере — ничего не делаем, приложение всё равно работает
-      console.log('VK Bridge не найден. Запуск в режиме предпросмотра.');
+    const bridge = window.vkBridge || window.VKBridge;
+
+    if (bridge && typeof bridge.send === "function") {
+      bridge.send("VKWebAppInit").catch(() => {});
     }
   </script>
-  <!-- ===================================================== -->
-
 </body>
 </html>
