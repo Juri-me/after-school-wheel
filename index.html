@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -6,88 +5,335 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>После школы — Колесо фортуны</title>
   <style>
+    :root {
+      --bg: #f7f1e8;
+      --bg-accent: #efe3d2;
+      --surface: rgba(255, 250, 243, 0.9);
+      --surface-strong: #fffaf2;
+      --border: rgba(110, 63, 23, 0.14);
+      --text: #2f190f;
+      --muted: #7f634e;
+      --accent: #8f2f23;
+      --accent-hover: #742318;
+      --gold: #d4a548;
+      --gold-soft: #f0d7a2;
+      --success: #2f7d4d;
+      --error: #b33939;
+      --shadow: 0 24px 60px rgba(61, 30, 13, 0.14);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+    }
+
     * { box-sizing: border-box; }
 
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(145deg, #eef4ff, #fff);
-      color: #172033;
+      font-family: "Georgia", "Times New Roman", serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top, rgba(255,255,255,.72), transparent 35%),
+        linear-gradient(160deg, #2f120f 0%, #5f2319 18%, #b97d32 55%, #f3e5ca 100%);
       overflow-x: hidden;
     }
 
-    .container { max-width: 480px; margin: auto; padding: 20px; }
-
-    .card {
-      background: #fff;
-      border-radius: 28px;
-      padding: 25px;
-      box-shadow: 0 15px 50px rgba(30, 70, 140, .15);
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,.18), rgba(0,0,0,0) 22%),
+        radial-gradient(circle at center, rgba(255, 243, 214, .14), transparent 42%);
+      pointer-events: none;
     }
 
-    .logo {
-      text-align: center;
-      color: #165dff;
-      font-size: 21px;
-      font-weight: 900;
+    .container {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 40px;
+      position: relative;
+      z-index: 1;
     }
 
-    .subtitle {
-      text-align: center;
-      color: #7a8499;
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(320px, 470px) minmax(320px, 1fr);
+      gap: 28px;
+      align-items: start;
+    }
+
+    .panel {
+      background: linear-gradient(180deg, rgba(255,250,243,.96), rgba(250,241,228,.94));
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .form-card,
+    .result-card {
+      padding: 32px;
+    }
+
+    .wheel-card {
+      padding: 24px 24px 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100%;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      color: var(--accent);
       font-size: 13px;
-      margin-top: 5px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      font-weight: 700;
     }
 
-    h1 { text-align: center; font-size: 29px; margin: 28px 0 12px; }
-
-    .description { text-align: center; color: #606b80; line-height: 1.5; }
-
-    .prize {
-      background: #edf4ff;
-      color: #174da9;
-      padding: 18px;
-      border-radius: 20px;
-      text-align: center;
-      font-weight: bold;
-      margin: 22px 0;
+    .eyebrow::before,
+    .eyebrow::after {
+      content: "";
+      width: 38px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(143,47,35,.65), transparent);
     }
 
-    label { display: block; font-size: 14px; font-weight: bold; margin-bottom: 8px; }
+    .brand {
+      text-align: left;
+      margin-bottom: 12px;
+    }
 
-    input {
+    .brand-title {
+      font-size: clamp(26px, 4vw, 42px);
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: #521b14;
+    }
+
+    .brand-subtitle {
+      margin-top: 6px;
+      font-size: 13px;
+      letter-spacing: .26em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .brand-motto {
+      margin-top: 10px;
+      color: #8d6d55;
+      font-size: 15px;
+      font-style: italic;
+    }
+
+    h1 {
+      margin: 18px 0 14px;
+      font-size: clamp(34px, 5vw, 56px);
+      line-height: .98;
+      font-weight: 700;
+      color: #33150f;
+    }
+
+    .description {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.65;
+      color: #5d4738;
+      max-width: 34ch;
+    }
+
+    .highlight-box {
+      margin: 26px 0;
+      padding: 20px 22px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(180deg, rgba(217,165,72,.22), rgba(255,250,242,.9));
+      border: 1px solid rgba(162, 104, 31, .18);
+    }
+
+    .highlight-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .2em;
+      color: #8c6530;
+      margin-bottom: 8px;
+    }
+
+    .highlight-value {
+      font-size: clamp(24px, 4vw, 34px);
+      line-height: 1.05;
+      color: #5a2118;
+      font-weight: 700;
+    }
+
+    .field-label {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #563729;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .phone-input {
       width: 100%;
-      padding: 16px;
-      border: 1px solid #d8dfeb;
-      border-radius: 15px;
-      font-size: 18px;
+      padding: 18px 20px;
+      border-radius: 18px;
+      border: 1px solid rgba(109, 72, 42, .16);
+      background: rgba(255,255,255,.78);
+      color: var(--text);
+      font-size: 19px;
+      outline: none;
+      transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
     }
 
-    button {
+    .phone-input:focus {
+      border-color: rgba(143, 47, 35, .45);
+      box-shadow: 0 0 0 4px rgba(143, 47, 35, .10);
+      transform: translateY(-1px);
+    }
+
+    .note,
+    .rules,
+    .helper,
+    .status-text {
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .note { margin-top: 12px; }
+
+    .rules {
+      margin: 24px 0 0;
+      padding: 18px 20px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.5);
+      border: 1px solid rgba(109, 72, 42, .12);
+    }
+
+    .rules-title {
+      margin: 0 0 10px;
+      color: #5f2c1e;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .rules ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .rules li + li { margin-top: 7px; }
+
+    .error {
+      min-height: 22px;
+      margin-top: 12px;
+      color: var(--error);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .button,
+    .ghost-button {
       width: 100%;
       border: 0;
-      border-radius: 16px;
-      padding: 17px;
+      border-radius: 18px;
+      padding: 18px 22px;
       margin-top: 16px;
-      background: #165dff;
-      color: white;
-      font-size: 16px;
-      font-weight: 900;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
       cursor: pointer;
+      transition: transform .2s ease, background .2s ease, opacity .2s ease, box-shadow .2s ease;
+      min-height: 58px;
     }
 
-    button:disabled { opacity: .5; cursor: wait; }
+    .button {
+      color: #fff8ef;
+      background: linear-gradient(180deg, #a43b2c, #7e261c);
+      box-shadow: 0 14px 28px rgba(126, 38, 28, .24);
+    }
 
-    .note { color: #7b8496; font-size: 12px; line-height: 1.5; margin-top: 10px; }
-    .error { color: #d12c2c; font-size: 13px; margin-top: 9px; }
-    .hidden { display: none; }
+    .button:hover { transform: translateY(-1px); background: linear-gradient(180deg, #b04231, #6f1d15); }
+    .button:disabled { opacity: .62; cursor: wait; transform: none; }
+
+    .ghost-button {
+      background: rgba(255,255,255,.65);
+      color: #613727;
+      border: 1px solid rgba(109, 72, 42, .14);
+    }
+
+    .screen.hidden { display: none; }
+
+    .wheel-header {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .wheel-title {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 38px);
+      color: #3d170f;
+    }
+
+    .wheel-copy {
+      margin: 8px 0 0;
+      color: #6f5544;
+      line-height: 1.6;
+      max-width: 33ch;
+      font-size: 15px;
+    }
+
+    .wheel-stage {
+      width: min(100%, 650px);
+      position: relative;
+      margin: 6px auto 18px;
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+    }
+
+    .wheel-halo {
+      position: absolute;
+      inset: 8%;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,245,224,.74), rgba(255,245,224,0) 66%);
+      filter: blur(8px);
+    }
+
+    .wheel-frame {
+      position: relative;
+      width: min(100%, 560px);
+      aspect-ratio: 1;
+      padding: 16px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fff7ea, #e5c48c 45%, #8e5a22 100%);
+      box-shadow: 0 24px 50px rgba(65, 29, 11, .25);
+    }
 
     .wheel-wrapper {
       position: relative;
-      width: min(310px, 100%);
-      aspect-ratio: 1;
-      margin: 25px auto;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      overflow: visible;
+      background: radial-gradient(circle, rgba(255,255,255,.5), rgba(255,255,255,0) 70%);
     }
 
     #wheel {
@@ -95,151 +341,539 @@
       width: 100%;
       height: 100%;
       border-radius: 50%;
-      transition: transform 4.5s cubic-bezier(.12, .72, .18, 1);
-      box-shadow: 0 12px 35px rgba(40, 70, 130, .25);
+      transition: transform 5.4s cubic-bezier(.08, .74, .16, 1);
+      filter: drop-shadow(0 18px 28px rgba(46, 16, 5, .22));
+      background: transparent;
     }
 
     .pointer {
       position: absolute;
       z-index: 5;
-      top: -5px;
+      top: -14px;
       left: 50%;
       transform: translateX(-50%);
       width: 0;
       height: 0;
-      border-left: 16px solid transparent;
-      border-right: 16px solid transparent;
-      border-top: 30px solid #172033;
+      border-left: 24px solid transparent;
+      border-right: 24px solid transparent;
+      border-top: 48px solid #4a160f;
+      filter: drop-shadow(0 8px 10px rgba(25, 10, 4, .35));
     }
 
-    .result {
+    .pointer::after {
+      content: "";
+      position: absolute;
+      left: -10px;
+      top: -47px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #f7e1b0;
+      border: 2px solid rgba(74, 22, 15, .24);
+    }
+
+    .wheel-legend {
+      width: 100%;
+      margin-top: 8px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.52);
+      border: 1px solid rgba(109, 72, 42, .10);
+      font-size: 13px;
+      color: #654a39;
+    }
+
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex: 0 0 auto;
+      box-shadow: 0 0 0 3px rgba(255,255,255,.55);
+    }
+
+    .loading-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(109, 72, 42, .12);
+      color: #66442f;
+      font-size: 13px;
+      margin-top: 8px;
+    }
+
+    .loading-chip::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 0 0 rgba(212,165,72,.55);
+      animation: pulse 1.6s infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(212,165,72,.55); }
+      70% { box-shadow: 0 0 0 12px rgba(212,165,72,0); }
+      100% { box-shadow: 0 0 0 0 rgba(212,165,72,0); }
+    }
+
+    .result-card {
+      margin-top: 28px;
+    }
+
+    .result-box {
+      padding: 28px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(255,248,234,.95), rgba(248,237,220,.88));
+      border: 1px solid rgba(111, 72, 42, .12);
       text-align: center;
-      padding: 25px;
-      background: #f3f7ff;
-      border-radius: 22px;
     }
 
-    .result-emoji { font-size: 60px; }
-    .result h2 { font-size: 26px; }
-    .result p { color: #626d82; line-height: 1.5; }
-    .success { color: #168548 !important; font-weight: bold; }
+    .result-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 92px;
+      min-height: 92px;
+      padding: 18px;
+      margin-bottom: 16px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fff8e6, #efcf93 75%);
+      box-shadow: inset 0 2px 10px rgba(255,255,255,.6), 0 18px 30px rgba(117, 67, 24, .18);
+      font-size: 44px;
+    }
+
+    .result-kicker {
+      margin: 0 0 12px;
+      color: var(--accent);
+      font-size: 13px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .result-box h2 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.08;
+      color: #3b160f;
+    }
+
+    .result-box p {
+      margin: 14px auto 0;
+      color: #654d3d;
+      line-height: 1.7;
+      max-width: 36ch;
+      font-size: 16px;
+    }
+
+    .success {
+      margin-top: 18px !important;
+      color: var(--success) !important;
+      font-weight: 700;
+    }
+
+    .footer-help {
+      margin-top: 18px;
+      text-align: center;
+      color: #896a55;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .desktop-only { display: block; }
+
+    @media (max-width: 980px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .form-card,
+      .result-card,
+      .wheel-card {
+        padding: 24px;
+      }
+
+      .description,
+      .wheel-copy { max-width: none; }
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        width: min(100% - 18px, 100%);
+        padding: 12px 0 24px;
+      }
+
+      .form-card,
+      .result-card,
+      .wheel-card {
+        padding: 18px;
+        border-radius: 24px;
+      }
+
+      h1 {
+        margin-top: 14px;
+        font-size: 36px;
+      }
+
+      .brand-title { font-size: 28px; }
+      .highlight-value { font-size: 24px; }
+      .phone-input { font-size: 17px; padding: 16px 18px; }
+      .button, .ghost-button { min-height: 54px; padding: 16px 18px; }
+      .wheel-header {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 14px;
+      }
+      .wheel-stage { width: 100%; }
+      .wheel-frame { padding: 12px; }
+      .pointer {
+        top: -11px;
+        border-left-width: 18px;
+        border-right-width: 18px;
+        border-top-width: 36px;
+      }
+      .pointer::after {
+        top: -35px;
+        left: -8px;
+        width: 16px;
+        height: 16px;
+      }
+      .wheel-legend {
+        grid-template-columns: 1fr;
+      }
+      .result-box {
+        padding: 20px 16px;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="card" id="registration">
-      <div class="logo">ПОСЛЕ ШКОЛЫ</div>
-      <div class="subtitle">театральная студия</div>
-      <h1>🎭 Колесо фортуны</h1>
-      <div class="description">
-        Попробуйте удачу и узнайте, какой подарок подготовила для вас наша театральная студия.
-      </div>
-      <div class="prize">
-        🎁 Главный приз<br><br>
-        1 МЕСЯЦ ОБУЧЕНИЯ БЕСПЛАТНО
-      </div>
-      <label for="phone">Номер телефона</label>
-      <input id="phone" type="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__">
-      <div class="note">
-        ⚠️ Введите тот номер телефона, который вы указывали при записи на пробное занятие.
-      </div>
-      <div id="error" class="error" role="alert"></div>
-      <button id="checkButton" type="button" onclick="checkPhone()">ПРОВЕРИТЬ УЧАСТИЕ</button>
-    </div>
+    <div class="layout">
+      <section class="panel form-card">
+        <div id="registration" class="screen">
+          <div class="eyebrow">Театральная студия</div>
+          <div class="brand">
+            <div class="brand-title">ПОСЛЕ ШКОЛЫ</div>
+            <div class="brand-subtitle">Театральная студия</div>
+            <div class="brand-motto">Театр начинается с тебя.</div>
+          </div>
 
-    <div class="card hidden" id="wheelScreen">
-      <div class="logo">ПОСЛЕ ШКОЛЫ</div>
-      <h1>🎉 Ваша попытка</h1>
-      <div class="description">
-        У вас есть одна попытка. После вращения повторное участие будет недоступно.
-      </div>
-      <div class="wheel-wrapper">
-        <div class="pointer"></div>
-        <canvas id="wheel" width="620" height="620"></canvas>
-      </div>
-      <div id="spinError" class="error" role="alert"></div>
-      <button id="spinButton" type="button" onclick="spin()">🎡 КРУТИТЬ КОЛЕСО</button>
-    </div>
+          <h1>Колесо фортуны</h1>
+          <p class="description">
+            Испытайте удачу и узнайте, какой подарок подготовила для вас театральная студия «После школы».
+          </p>
 
-    <div class="card hidden" id="result">
-      <div class="logo">ПОСЛЕ ШКОЛЫ</div>
-      <h1>🎭 Результат</h1>
-      <div class="result">
-        <div class="result-emoji" id="emoji">🎉</div>
-        <h2 id="title"></h2>
-        <p id="text"></p>
-        <p class="success">✓ Результат зарегистрирован на сервере</p>
-      </div>
+          <div class="highlight-box">
+            <div class="highlight-label">Главный приз</div>
+            <div class="highlight-value">Месяц обучения бесплатно</div>
+          </div>
+
+          <label class="field-label" for="phone">Номер телефона</label>
+          <input id="phone" class="phone-input" type="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__">
+
+          <div class="note">
+            Введите номер телефона, который вы указывали при записи на пробное занятие.
+          </div>
+
+          <div id="error" class="error" role="alert"></div>
+          <button id="checkButton" class="button" type="button">Проверить участие</button>
+
+          <div class="rules">
+            <div class="rules-title">Правила участия</div>
+            <ul>
+              <li>Участие доступно по номеру телефона, указанному при записи на пробное занятие.</li>
+              <li>Каждый участник может вращать колесо один раз.</li>
+              <li>Результат фиксируется после завершения вращения.</li>
+              <li>Условия использования призов и срок их действия определяются студией.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="beforeSpin" class="screen hidden">
+          <div class="eyebrow">Ваша попытка</div>
+          <div class="brand">
+            <div class="brand-title">ПОСЛЕ ШКОЛЫ</div>
+            <div class="brand-subtitle">Театральная студия</div>
+          </div>
+
+          <h1>Одна попытка</h1>
+          <p class="description">
+            Вам доступна одна попытка. После вращения колеса результат будет зафиксирован, а повторное участие с этого номера станет недоступным.
+          </p>
+
+          <div class="helper" style="margin-top:18px;">
+            После нажатия кнопки сервер определит итоговый сектор, а сайт плавно покажет результат на колесе.
+          </div>
+
+          <div id="spinError" class="error" role="alert"></div>
+          <button id="spinButton" class="button" type="button">Крутить колесо</button>
+          <button id="backButton" class="ghost-button" type="button">Изменить номер</button>
+        </div>
+
+        <div id="resultScreen" class="screen hidden">
+          <div class="eyebrow">Результат</div>
+          <div class="brand">
+            <div class="brand-title">ПОСЛЕ ШКОЛЫ</div>
+            <div class="brand-subtitle">Театральная студия</div>
+          </div>
+
+          <div class="result-box">
+            <div class="result-badge" id="resultEmoji">🎭</div>
+            <p class="result-kicker" id="resultKicker">Ваш приз</p>
+            <h2 id="resultTitle"></h2>
+            <p id="resultText"></p>
+            <p class="success">Статус: Результат зарегистрирован</p>
+          </div>
+
+          <div class="footer-help">
+            Остались вопросы? Свяжитесь с администратором студии — поможем разобраться.
+          </div>
+        </div>
+      </section>
+
+      <section class="panel wheel-card">
+        <div class="wheel-header">
+          <div>
+            <h2 class="wheel-title">Колесо призов</h2>
+            <p class="wheel-copy">
+              На колесе 10 отдельных секторов. Даже одинаковые названия — это самостоятельные сектора со своей серверной логикой.
+            </p>
+          </div>
+          <div id="loadingState" class="loading-chip hidden">Проверяем участие</div>
+        </div>
+
+        <div class="wheel-stage">
+          <div class="wheel-halo"></div>
+          <div class="pointer"></div>
+          <div class="wheel-frame">
+            <div class="wheel-wrapper">
+              <canvas id="wheel" width="900" height="900"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="wheel-legend" id="wheelLegend"></div>
+      </section>
     </div>
   </div>
 
   <script>
     const API_URL = "https://posle-shkoly-wheel.yu-begmetyuk.workers.dev/";
 
-    const prizes = [
+    const sectors = [
       {
-        name: "1 месяц обучения",
+        id: 1,
+        key: "year_free",
+        label: "Год обучения бесплатно",
+        shortLabel: ["Год", "бесплатно"],
+        chance: 0,
+        color: "#5A2118",
+        text: "Этот сектор остаётся на колесе как главный символ розыгрыша, но сервер никогда не выбирает его как итоговый результат.",
+        emoji: "👑",
+        resultType: "Ваш приз"
+      },
+      {
+        id: 2,
+        key: "month_free",
+        label: "Месяц обучения бесплатно",
+        shortLabel: ["Месяц", "бесплатно"],
+        chance: 5,
+        color: "#B23A2B",
+        text: "Поздравляем! Вы выиграли месяц обучения в театральной студии «После школы».",
         emoji: "🏆",
-        text: "Поздравляем! Вы выиграли 1 месяц обучения в театральной студии «После школы»!",
-        color: "#165DFF"
+        resultType: "Вы выиграли"
       },
       {
-        name: "Скидка 20%",
+        id: 3,
+        key: "week_free_1",
+        label: "Неделя бесплатно",
+        shortLabel: ["Неделя", "бесплатно"],
+        chance: 15,
+        color: "#8A5A2A",
+        text: "Поздравляем! Вы выиграли неделю бесплатного обучения в театральной студии «После школы».",
+        emoji: "🎉",
+        resultType: "Ваш приз"
+      },
+      {
+        id: 4,
+        key: "week_free_2",
+        label: "Неделя бесплатно",
+        shortLabel: ["Неделя", "бесплатно"],
+        chance: 15,
+        color: "#C88B3A",
+        text: "Поздравляем! Вы выиграли неделю бесплатного обучения в театральной студии «После школы».",
+        emoji: "🎉",
+        resultType: "Ваш приз"
+      },
+      {
+        id: 5,
+        key: "discount20_1",
+        label: "Скидка 20%",
+        shortLabel: ["Скидка", "20%"],
+        chance: 10,
+        color: "#D9A548",
+        text: "Поздравляем! Вы получили скидку 20% на обучение в театральной студии «После школы».",
         emoji: "🎁",
-        text: "Поздравляем! Вы получили скидку 20% на обучение.",
-        color: "#6C63FF"
+        resultType: "Ваш приз"
       },
       {
-        name: "Скидка 10%",
+        id: 6,
+        key: "discount20_2",
+        label: "Скидка 20%",
+        shortLabel: ["Скидка", "20%"],
+        chance: 10,
+        color: "#B06D33",
+        text: "Поздравляем! Вы получили скидку 20% на обучение в театральной студии «После школы».",
+        emoji: "🎁",
+        resultType: "Ваш приз"
+      },
+      {
+        id: 7,
+        key: "discount10_1",
+        label: "Скидка 10%",
+        shortLabel: ["Скидка", "10%"],
+        chance: 10,
+        color: "#7A2E2A",
+        text: "Поздравляем! Вы получили скидку 10% на обучение в театральной студии «После школы».",
         emoji: "✨",
-        text: "Поздравляем! Вы получили скидку 10% на обучение.",
-        color: "#21A179"
+        resultType: "Ваш приз"
       },
       {
-        name: "Спасибо за участие",
-        emoji: "🎭",
-        text: "Спасибо за участие! Будем рады видеть вас в «После школы».",
-        color: "#FFC83D"
+        id: 8,
+        key: "discount10_2",
+        label: "Скидка 10%",
+        shortLabel: ["Скидка", "10%"],
+        chance: 10,
+        color: "#944335",
+        text: "Поздравляем! Вы получили скидку 10% на обучение в театральной студии «После школы».",
+        emoji: "✨",
+        resultType: "Ваш приз"
+      },
+      {
+        id: 9,
+        key: "voucher1000_1",
+        label: "1 000 ₽ на первый абонемент",
+        shortLabel: ["1 000 ₽", "абонемент"],
+        chance: 12.5,
+        color: "#6A3524",
+        text: "Поздравляем! Вы получили 1 000 ₽ на первый абонемент в театральной студии «После школы».",
+        emoji: "💳",
+        resultType: "Ваш приз"
+      },
+      {
+        id: 10,
+        key: "voucher1000_2",
+        label: "1 000 ₽ на первый абонемент",
+        shortLabel: ["1 000 ₽", "абонемент"],
+        chance: 12.5,
+        color: "#A04B2B",
+        text: "Поздравляем! Вы получили 1 000 ₽ на первый абонемент в театральной студии «После школы».",
+        emoji: "💳",
+        resultType: "Ваш приз"
       }
     ];
 
-    let phone = "";
-    let prize = null;
-    let rotation = 0;
-    let isSpinning = false;
-    let requestInProgress = false;
+    const registration = document.getElementById("registration");
+    const beforeSpin = document.getElementById("beforeSpin");
+    const resultScreen = document.getElementById("resultScreen");
+    const phoneInput = document.getElementById("phone");
+    const checkButton = document.getElementById("checkButton");
+    const spinButton = document.getElementById("spinButton");
+    const backButton = document.getElementById("backButton");
+    const errorBox = document.getElementById("error");
+    const spinErrorBox = document.getElementById("spinError");
+    const loadingState = document.getElementById("loadingState");
+    const wheelCanvas = document.getElementById("wheel");
+    const legend = document.getElementById("wheelLegend");
 
-    function normalize(value) {
+    let phone = "";
+    let rotation = 0;
+    let requestInProgress = false;
+    let spinCompleted = false;
+
+    function normalizePhone(value) {
       let digits = value.replace(/\D/g, "");
-      if (digits.startsWith("8")) digits = "7" + digits.substring(1);
+      if (digits.startsWith("8")) digits = "7" + digits.slice(1);
       return digits;
     }
 
-    function checkPhone() {
-      const error = document.getElementById("error");
-      const value = normalize(document.getElementById("phone").value);
-      error.textContent = "";
+    function formatPhoneInput(value) {
+      const digits = normalizePhone(value).slice(0, 11);
+      const local = digits.startsWith("7") ? digits.slice(1) : digits;
+      let result = "+7";
+      if (local.length > 0) result += " (" + local.slice(0, 3);
+      if (local.length >= 3) result += ")";
+      if (local.length > 3) result += " " + local.slice(3, 6);
+      if (local.length > 6) result += "-" + local.slice(6, 8);
+      if (local.length > 8) result += "-" + local.slice(8, 10);
+      return result;
+    }
 
-      if (value.length !== 11 || !value.startsWith("7")) {
-        error.textContent = "Введите корректный российский номер телефона.";
+    function showScreen(screen) {
+      [registration, beforeSpin, resultScreen].forEach((node) => node.classList.add("hidden"));
+      screen.classList.remove("hidden");
+    }
+
+    function setLoading(visible, text = "Проверяем участие") {
+      loadingState.textContent = text;
+      loadingState.classList.toggle("hidden", !visible);
+    }
+
+    function buildLegend() {
+      legend.innerHTML = sectors.map((sector) => `
+        <div class="legend-item">
+          <span class="legend-dot" style="background:${sector.color}"></span>
+          <span>${sector.label}</span>
+        </div>
+      `).join("");
+    }
+
+    function checkPhone() {
+      errorBox.textContent = "";
+      const normalized = normalizePhone(phoneInput.value);
+
+      if (normalized.length !== 11 || !normalized.startsWith("7")) {
+        errorBox.textContent = "Введите корректный российский номер телефона.";
         return;
       }
 
-      phone = value;
-      document.getElementById("registration").classList.add("hidden");
-      document.getElementById("wheelScreen").classList.remove("hidden");
+      phone = normalized;
+      showScreen(beforeSpin);
+    }
+
+    function getSectorById(sectorId) {
+      return sectors.find((sector) => sector.id === Number(sectorId));
+    }
+
+    function calculateStopRotation(index) {
+      const sectorAngle = 360 / sectors.length;
+      const centerAngle = index * sectorAngle + sectorAngle / 2;
+      return 360 * 7 + (360 - centerAngle);
     }
 
     async function spin() {
-      if (isSpinning || requestInProgress || prize || !phone) return;
+      if (requestInProgress || spinCompleted || !phone) return;
 
       requestInProgress = true;
-      const button = document.getElementById("spinButton");
-      const error = document.getElementById("spinError");
-
-      button.disabled = true;
-      button.textContent = "Связываемся с сервером…";
-      error.textContent = "";
+      spinButton.disabled = true;
+      backButton.disabled = true;
+      spinErrorBox.textContent = "";
+      spinButton.textContent = "Связываемся с сервером…";
+      setLoading(true, "Проверяем участие");
 
       try {
         const response = await fetch(API_URL, {
@@ -255,89 +889,79 @@
           throw new Error("Сервер вернул некорректный ответ.");
         }
 
-        if (!response.ok || !data.ok || !data.prize) {
-          throw new Error(
-            data.error || "Сервер не подтвердил результат. Обновите страницу или обратитесь к организатору."
-          );
+        if (!response.ok || !data.ok) {
+          throw new Error(data.error || "Не удалось выполнить запрос. Пожалуйста, попробуйте ещё раз немного позже.");
         }
 
-        const selectedPrize = prizes.find(item => item.name === data.prize.name);
-        if (!selectedPrize) {
-          throw new Error("Сервер вернул неизвестный приз. Обратитесь к организатору.");
+        const sector = getSectorById(data.sectorId);
+        if (!sector) {
+          throw new Error("Сервер вернул неизвестный сектор. Обратитесь к организатору.");
         }
 
-        prize = selectedPrize;
-        isSpinning = true;
+        if (data.prizeKey && data.prizeKey !== sector.key) {
+          throw new Error("Сервер вернул несогласованный результат. Обратитесь к организатору.");
+        }
 
-        const index = prizes.indexOf(prize);
-        const sector = 360 / prizes.length;
-        const target = 360 * 6 + (360 - (index * sector + sector / 2));
-        rotation += target;
+        setLoading(true, "Колесо вращается");
+        spinButton.textContent = "Колесо вращается…";
 
-        button.textContent = "Колесо вращается…";
-        document.getElementById("wheel").style.transform = "rotate(" + rotation + "deg)";
+        const index = sectors.findIndex((item) => item.id === sector.id);
+        rotation += calculateStopRotation(index);
+        wheelCanvas.style.transform = `rotate(${rotation}deg)`;
 
         setTimeout(() => {
-          document.getElementById("wheelScreen").classList.add("hidden");
-          document.getElementById("result").classList.remove("hidden");
-          document.getElementById("emoji").textContent = prize.emoji;
-          document.getElementById("title").textContent = prize.name;
-          document.getElementById("text").textContent = prize.text;
-        }, 4600);
-      } catch (err) {
+          spinCompleted = true;
+          setLoading(false);
+          showResult(sector);
+        }, 5450);
+      } catch (error) {
         requestInProgress = false;
-        button.disabled = false;
-        button.textContent = "🎡 КРУТИТЬ КОЛЕСО";
-        error.textContent = err.message || "Ошибка соединения с сервером.";
+        spinButton.disabled = false;
+        backButton.disabled = false;
+        spinButton.textContent = "Крутить колесо";
+        spinErrorBox.textContent = error.message || "Ошибка соединения с сервером.";
+        setLoading(false);
       }
     }
 
-    function drawWheel() {
-      const canvas = document.getElementById("wheel");
-      const ctx = canvas.getContext("2d");
-      const center = 310;
-      const radius = 295;
+    function showResult(sector) {
+      document.getElementById("resultEmoji").textContent = sector.emoji;
+      document.getElementById("resultKicker").textContent = sector.resultType;
+      document.getElementById("resultTitle").textContent = sector.label;
+      document.getElementById("resultText").textContent = sector.text;
+      showScreen(resultScreen);
+    }
 
-      for (let i = 0; i < prizes.length; i++) {
-        const start = i * 2 * Math.PI / prizes.length - Math.PI / 2;
-        const end = (i + 1) * 2 * Math.PI / prizes.length - Math.PI / 2;
+    function drawWheel() {
+      const canvas = wheelCanvas;
+      const ctx = canvas.getContext("2d");
+      const center = canvas.width / 2;
+      const radius = center - 26;
+      const sectorAngle = (Math.PI * 2) / sectors.length;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      sectors.forEach((sector, index) => {
+        const start = index * sectorAngle - Math.PI / 2;
+        const end = start + sectorAngle;
 
         ctx.beginPath();
         ctx.moveTo(center, center);
         ctx.arc(center, center, radius, start, end);
         ctx.closePath();
-        ctx.fillStyle = prizes[i].color;
+        ctx.fillStyle = sector.color;
         ctx.fill();
 
         ctx.save();
         ctx.translate(center, center);
-        ctx.rotate((start + end) / 2);
-        ctx.fillStyle = "#fff";
-        ctx.font = "bold 23px Arial";
-        ctx.textAlign = "right";
-        ctx.fillText(prizes[i].name, 260, 8);
-        ctx.restore();
-      }
+        ctx.rotate(start + sectorAngle / 2);
 
-      ctx.beginPath();
-      ctx.arc(center, center, 45, 0, Math.PI * 2);
-      ctx.fillStyle = "#fff";
-      ctx.fill();
-      ctx.strokeStyle = "#d9e2f2";
-      ctx.lineWidth = 7;
-      ctx.stroke();
-    }
+        ctx.fillStyle = "rgba(255,255,255,.22)";
+        ctx.fillRect(radius * 0.15, -radius * 0.42, radius * 0.68, radius * 0.84);
 
-    drawWheel();
-  </script>
+        ctx.fillStyle = "#FFF8EF";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
 
-  <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
-  <script>
-    const bridge = window.vkBridge || window.VKBridge;
-
-    if (bridge && typeof bridge.send === "function") {
-      bridge.send("VKWebAppInit").catch(() => {});
-    }
-  </script>
-</body>
-</html>
+        const line1 = sector.shortLabel[0];
+        const line2 = sector.shortLabel[1]
