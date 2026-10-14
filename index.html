@@ -78,7 +78,7 @@ const $=id=>document.getElementById(id);
 let phase='phone',busy=false,registered=false,savedPhone='';
 function layout(){ $('scene').dataset.step=phase; $('scene').style.transform=''; $('viewport').style.height=''; }
 addEventListener('resize',layout);layout();
-$('zone-toggle').onclick=()=>{const active=$('scene').classList.toggle('show-zones');
+
 function normalize(v){let d=v.replace(/\D/g,'');if(d.length===10)d='7'+d;if(d.startsWith('8'))d='7'+d.slice(1);return d;}
 function error(message){$('error').textContent=message;$('error').hidden=!message;}
 $('back').onclick=()=>{if(busy||registered)return;phase='phone';layout();$('phone').disabled=false;$('action').textContent='К КОЛЕСУ →';$('back').hidden=true;$('help').textContent='Введите номер телефона, который вы указывали при записи на пробное занятие.';error('');};
